@@ -1,0 +1,83 @@
+.detailForm, .details, .details div{
+    display: flex;
+}
+
+.detailForm{
+    height: 100vh;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.detailForm label{
+    font-size: larger;
+}
+
+.detailForm input:not([type=submit]){
+    margin-bottom: 20px;
+    width: 300px;
+    border: 0;
+    user-select: all;
+}
+.detailForm input:not([type=submit]):focus{
+    outline: 0;
+}
+
+.detailForm input[type=submit], .detailForm button{
+    width: fit-content;
+    padding: 10px;
+    border: 0;
+    background-color: var(--color-three);
+}
+
+.detailForm input[type=submit]:hover, .detailForm button:hover{
+   background-color: var(--color-four);
+}
+
+.detailForm label, .detailForm h2{
+    color: black;
+}
+
+.details{
+    flex-direction: column;
+    flex-basis: 50%;
+    height: 100vh;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-five);
+}
+
+.details div{
+    flex-direction: column;
+    gap: 10px;
+}
+
+.details div:last-child{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.error{
+    color: red;
+    grid-column: 1/3;
+}
+
+.title{
+    flex-basis: 50%;
+    font-size: xx-large;
+}
+
+@media screen and (max-width: 400px) {
+    .detailForm{
+        flex-direction: column-reverse;
+        justify-content: space-between;
+    }
+    .title{
+        flex-basis: 10%;
+        padding: 20px 0;
+    }
+    .details{
+        flex-basis: 70%;
+        width: 100%;
+    }
+}

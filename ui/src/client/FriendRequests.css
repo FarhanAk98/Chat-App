@@ -1,0 +1,44 @@
+#friendRequest{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background-color: var(--color-three);
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+    transition: 0.5s transform;
+}
+
+#friendRequest input, #friendRequest button{
+    border: 0;
+}
+
+#search input[type=text]{
+    border: 0;
+    border-radius: 0;
+    width: 200px;
+    height: 25px;
+}
+
+#search input[type=text]:focus{
+    outline: none;
+}
+
+#search input[type=submit]{
+    height: 27px;
+    border: none;
+}
+
+#available{
+    grid-row: 2/3;
+}
+
+.user{
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--color-three);
+    padding: 10px 0px;
+}

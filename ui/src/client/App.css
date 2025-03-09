@@ -1,0 +1,45 @@
+:root{
+    --color-one: #213555;
+    --color-two: #C62300;
+    --color-three: #79D7BE;
+    --color-four: #D8C4B6;
+    --color-five: #F5EFE7;
+    --color-seven: #F14A00;
+}
+
+button, input{
+    color: black;
+}
+
+body{
+    margin: 0;
+    background-color: var(--color-one);
+}
+
+#topBar{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+}
+
+#logout{
+    font-size: x-large;
+    border: 0;
+    background-color: var(--color-six);
+    padding: 10px;
+}
+
+#logout:hover{
+    background-color: var(--color-three);
+}
+
+h1{
+    text-align: center;
+    margin: 0;
+}
+
+main{
+    position: relative;
+    overflow-x: hidden;
+    border: 1px solid black;
+}

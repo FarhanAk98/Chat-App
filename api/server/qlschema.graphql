@@ -1,0 +1,50 @@
+
+type messageOutput {
+    text: String!
+    time: String!
+    senderName: String!
+    receiverName: String!
+}
+
+input reUser {
+    name: String!
+    email: String!
+}
+
+input commInput {
+    reName: String!
+    usName: String!
+}
+
+input userInput {
+    name: String!
+    password: String!
+}
+
+input messageInput {
+    text: String!
+    time: String!
+    senderName: String!
+    receiverName: String!
+}
+
+type Query {
+    Users(input: userInput): String
+    getUsernames(input: String!): [String!]!
+    GetChatMessages(input: commInput): [messageOutput!]!
+    GetRequests(name: String!): [String!]!
+    GetConnections(input: String!): [String!]!
+    GetFriends(name: String!): [String!]!
+}
+
+type Mutation {
+    Register(input: userInput): Boolean
+    Chats(input: messageInput): messageOutput!
+    SendRequest(input: commInput): Boolean
+    AddFriend(input: commInput): Boolean
+    RemoveRequest(input: commInput): Boolean
+}
+
+type Subscription {
+    GetNewMessages(currentUser: String!): messageOutput!
+}
