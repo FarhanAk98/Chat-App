@@ -76,6 +76,7 @@ const resolvers = {
 }
 
 const {ApolloServer} = require('apollo-server-express');
+const { createServer } = require('http');
 
 async function startServer() {
     const typeDefs = fs.readFileSync(require.resolve('./qlschema.graphql')).toString('utf-8')
@@ -90,9 +91,14 @@ async function startServer() {
     });
     // Connect to the database
     db = databaseConnect();
+    const httpServer = createServer(app);
 
     await apolloServer.start();
     apolloServer.applyMiddleware({ app, path: '/graphql' });
+    const port = process.env.PORT || 4000
+    httpServer.listen(port, () => {
+        console.log('Server is running on http://localhost:4000');
+    });
 }
 
 // Start the server
