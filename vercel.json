@@ -6,7 +6,7 @@
         "use": "@vercel/static-build"
       },
       {
-        "src": "api/**/*",
+        "src": "api/server/index.js",
         "use": "@vercel/node"
       }
   ],
@@ -14,6 +14,10 @@
     {
       "src": "/graphql",
       "dest": "/api/server/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/ui/$1"
     }
   ]
 }
