@@ -105,8 +105,6 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
     const setMessage = (message:any) => {
         if(message.senderName == pusherChat.current || message.receiverName == pusherChat.current){
             const msgs = [printMessageScreen(message), ...pusherMessages.current];
-            console.log(chatMessages)
-            console.log(pusherMessages.current)
             pusherMessages.current = msgs
             setChatMessages(msgs)
         }
@@ -192,9 +190,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
                     body: JSON.stringify({query, variables:{input}})
                 });
             }
-            getRequests();
-            setResponseUser("")
-            props.GetFriends();
+            window.location.reload();
         }
     }
 
@@ -216,7 +212,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
                 )}
                 <form id='requests' method='POST' onSubmit={sendResponse}>
                     {friendRequests.map((n:string) =>
-                        <button onClick={()=>setReply(n)} style={{backgroundColor: n == currentChat ? "#79D7BE" : "#213555"}}><strong>{n}</strong> sent you a request</button>
+                        <button onClick={()=>setReply(n)}><strong>{n}</strong> sent you a request</button>
                     )}
                 </form>
             </div>

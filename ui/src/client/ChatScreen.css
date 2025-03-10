@@ -34,6 +34,7 @@
 }
 
 #requests button{
+  background-color: var(--color-one);
   width: 100%;
 }
 
