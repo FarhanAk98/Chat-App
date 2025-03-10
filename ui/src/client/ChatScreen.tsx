@@ -83,11 +83,9 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
                 connections.forEach((ele: [string, string]) => {
                     if(!subscribedChannels.has(ele[1]) && ele[0] == "true"){
                         const channel = pusher.subscribe(ele[1]);
-                        console.log(ele[1])
                         subscribedChannels.add(ele[1]);
                         channel.bind("new-message", (data: { GetNewMessages: any; })=>{
                             const { GetNewMessages } = data;
-                            console.log(data);
                             setMessage(GetNewMessages)
                         })
                     }
@@ -107,8 +105,10 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
     const setMessage = (message:any) => {
         if(message.senderName == pusherChat.current || message.receiverName == pusherChat.current){
             const msgs = [printMessageScreen(message), ...pusherMessages.current];
-            setChatMessages(msgs)
+            console.log(chatMessages)
+            console.log(pusherMessages.current)
             pusherMessages.current = msgs
+            setChatMessages(msgs)
         }
         else{
             const exc = document.getElementsByClassName('notif ' + message.senderName);
@@ -120,8 +120,8 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
         if(result.data){
             const msgs = result.data.GetChatMessages.slice().reverse().map(
                 (m:messageOutput)=>printMessageScreen(m));
-            setChatMessages(msgs);
             pusherMessages.current = msgs;
+            setChatMessages(msgs);
         }
             
     }, [result])
@@ -216,7 +216,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
                 )}
                 <form id='requests' method='POST' onSubmit={sendResponse}>
                     {friendRequests.map((n:string) =>
-                        <button onClick={()=>setReply(n)}><strong>{n}</strong> sent you a request</button>
+                        <button onClick={()=>setReply(n)} style={{backgroundColor: n == currentChat ? "#79D7BE" : "#213555"}}><strong>{n}</strong> sent you a request</button>
                     )}
                 </form>
             </div>
