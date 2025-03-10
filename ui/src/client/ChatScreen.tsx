@@ -63,30 +63,38 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
         const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {
             cluster: import.meta.env.VITE_PUSHER_CLUSTER
         })
-        const query = `query Query($input: String!) {
+        const query = `query Query($input: authPusher) {
             GetConnections(input: $input)
         }`;
-        const input = props.currentUser;
         const subscribedChannels:Set<string> = new Set();
-        (async()=>{
-            const response = await fetch('/graphql', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({query, variables:{input}})
-            })
-            const result = await response.json();
-            const connections = result.data.GetConnections;
-            connections.forEach((conn:string) => {
-                if(!subscribedChannels.has(conn)){
-                    const channel = pusher.subscribe(conn);
-                    subscribedChannels.add(conn);
-                    channel.bind("new-message", (data: { GetNewMessages: any; })=>{
-                        const { GetNewMessages } = data;
-                        setMessage(GetNewMessages)
-                    })
-                }
-            });
-        })();
+        pusher.connection.bind('connected', ()=>{
+            const input = {
+                name: props.currentUser,
+                socket: pusher.connection.socket_id
+            };
+            (async()=>{
+                const response = await fetch('/graphql', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query, variables:{input}})
+                })
+                const result = await response.json();
+                const connections = result.data.GetConnections;
+                connections.forEach((ele: [string, string]) => {
+                    if(!subscribedChannels.has(ele[1]) && ele[0] == "true"){
+                        const channel = pusher.subscribe(ele[1]);
+                        console.log(ele[1])
+                        subscribedChannels.add(ele[1]);
+                        channel.bind("new-message", (data: { GetNewMessages: any; })=>{
+                            const { GetNewMessages } = data;
+                            console.log(data);
+                            setMessage(GetNewMessages)
+                        })
+                    }
+                });
+            })();
+        })
+        
         getRequests();
         return () => {
             subscribedChannels.forEach((conn:string) => {

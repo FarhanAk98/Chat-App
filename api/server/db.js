@@ -1,6 +1,7 @@
 const cryptoKey = process.env.CRYPTO_KEY
 const {MongoClient} = require('mongodb');
 const random = require('random-key');
+const Pusher = require('pusher');
 const crypto = require('crypto-js')
 let db;
 
@@ -86,14 +87,6 @@ async function addFriend(_, {input}){
     })
 }
 
-async function getConnections(_, {input}){
-    const search = crypto.SHA256(input).toString();
-    const result = await db.collection('Users').findOne({search: search}, {projection: {chats: 1, _id: 0}});
-    return Object.values(result.chats).map(ele=>{
-        return crypto.AES.decrypt(ele, cryptoKey).toString(crypto.enc.Utf8)
-    })
-}
-
 async function getFriends(_, {name}){
     const search = crypto.SHA256(name).toString();
     const result = await db.collection('Users').findOne({search: search}, {projection: {chats: 1, _id: 0}});
@@ -108,5 +101,27 @@ async function removeRequest(_, {input}){
     await db.collection('Users').updateOne({name: input.usName}, {$pull: {requests: input.reName}});
 }
 
-module.exports = {databaseConnect, getUser, sendRequest, getUsernames, getConnections,
+async function getChatMessages(_, {input}){
+    const searchUs = crypto.SHA256(input.usName).toString();
+    const searchRe = crypto.SHA256(input.reName).toString();
+    const result = await db.collection('ChatMessage').find({
+        senderName: {$in: [searchUs, searchRe]},
+        receiverName: {$in: [searchRe, searchUs]}
+    }).toArray();
+
+    return result.map(ele=>{
+        ele.text = crypto.AES.decrypt(ele.text, cryptoKey).toString(crypto.enc.Utf8);
+        if(ele.senderName == searchUs){
+            ele.senderName = input.usName;
+            ele.receiverName = input.reName;
+        }
+        else{
+            ele.senderName = input.reName;
+            ele.receiverName = input.usName;
+        }
+        return ele
+    });
+}
+
+module.exports = {databaseConnect, getUser, sendRequest, getUsernames, getChatMessages,
                     getRequests, addFriend, getFriends, removeRequest, register};

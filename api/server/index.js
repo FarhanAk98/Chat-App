@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv')
 dotenv.config({path:'./api/server/env.env'});
 const Pusher = require('pusher');
-const {databaseConnect, getUser, sendRequest, getUsernames, getRequests, addFriend, getConnections,
+const {databaseConnect, getUser, sendRequest, getUsernames, getRequests, addFriend, getChatMessages,
             getFriends, removeRequest, register} = require('./db');
 const fs = require('fs');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
@@ -18,27 +18,6 @@ const pusher = new Pusher({
 })
 
 let db;
-async function getChatMessages(_, {input}){
-    const searchUs = crypto.SHA256(input.usName).toString();
-    const searchRe = crypto.SHA256(input.reName).toString();
-    const result = await db.collection('ChatMessage').find({
-        senderName: {$in: [searchUs, searchRe]},
-        receiverName: {$in: [searchRe, searchUs]}
-    }).toArray();
-
-    return result.map(ele=>{
-        ele.text = crypto.AES.decrypt(ele.text, cryptoKey).toString(crypto.enc.Utf8);
-        if(ele.senderName == searchUs){
-            ele.senderName = input.usName;
-            ele.receiverName = input.reName;
-        }
-        else{
-            ele.senderName = input.reName;
-            ele.receiverName = input.usName;
-        }
-        return ele
-    });
-}
 
 async function addChat(_, {input}){
     const searchSe = crypto.SHA256(input.senderName).toString();
@@ -55,6 +34,19 @@ async function addChat(_, {input}){
         {GetNewMessages: tempInput}
     )
     return tempInput;
+}
+
+async function getConnections(_, {input}){
+    const search = crypto.SHA256(input.name).toString();
+    const result = await db.collection('Users').findOne({search: search}, {projection: {chats: 1, _id: 0}});
+    return Object.values(result.chats).map(ele=>{
+        const conn = crypto.AES.decrypt(ele, cryptoKey).toString(crypto.enc.Utf8)
+        const auth = pusher.authenticate(input.socket, conn)
+        if(!auth.auth){
+            return ["false", conn]
+        }
+        return ["true", conn]
+    })
 }
 
 const resolvers = {
@@ -76,7 +68,6 @@ const resolvers = {
 }
 
 const {ApolloServer} = require('apollo-server-express');
-const { createServer } = require('http');
 
 async function startServer() {
     const typeDefs = fs.readFileSync(require.resolve('./qlschema.graphql')).toString('utf-8')
@@ -89,21 +80,12 @@ async function startServer() {
           path: '/graphql',
         },
     });
-    // Connect to the database
     db = databaseConnect();
-    const httpServer = createServer(app);
 
     await apolloServer.start();
     apolloServer.applyMiddleware({ app, path: '/graphql' });
-    const port = process.env.PORT || 4000
-    httpServer.listen(port, () => {
-        console.log('Server is running on http://localhost:4000');
-    });
 }
 
-// Start the server
-startServer().catch((err) => {
-    console.error('Error starting the server:', err);
-});
+startServer()
 
 module.exports = app;

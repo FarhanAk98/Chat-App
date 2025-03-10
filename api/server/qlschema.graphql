@@ -28,12 +28,17 @@ input messageInput {
     receiverName: String!
 }
 
+input authPusher {
+    name: String!
+    socket: String!
+}
+
 type Query {
     Users(input: userInput): String
     getUsernames(input: String!): [String!]!
     GetChatMessages(input: commInput): [messageOutput!]!
     GetRequests(name: String!): [String!]!
-    GetConnections(input: String!): [String!]!
+    GetConnections(input: authPusher): [[String!]!]!
     GetFriends(name: String!): [String!]!
 }
 
