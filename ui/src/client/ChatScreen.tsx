@@ -105,6 +105,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
     }, [])
 
     const setMessage = (message:any) => {
+        console.log(message)
         if(message.senderName == pusherChat.current || message.receiverName == pusherChat.current){
             const msgs = [printMessageScreen(message), ...pusherMessages.current];
             pusherMessages.current = msgs
@@ -135,7 +136,6 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
             senderName: props.currentUser,
             receiverName: currentChat
         }
-        console.log(input)
         if(filter.isProfane(textAreaContent)){
             alert("Please send an appropriate message")
         }
