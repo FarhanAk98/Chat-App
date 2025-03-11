@@ -1,7 +1,6 @@
 import './ChatScreen.css'
 import { MouseEvent, SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client';
-import { ToastContainer, toast } from 'react-toastify/unstyled';
 import { Filter } from 'bad-words';
 import Pusher from 'pusher-js'
 import FriendRequests from './FriendRequests';
@@ -136,6 +135,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
             senderName: props.currentUser,
             receiverName: currentChat
         }
+        console.log(input)
         if(filter.isProfane(textAreaContent)){
             alert("Please send an appropriate message")
         }
