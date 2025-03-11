@@ -68,6 +68,13 @@ function Register() {
                     <input type="password" name="password" id="password"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setPassword(e.target.value)}} 
                             required/>
+                    
+                    <ul>
+                        <li>At least 7 character long</li>
+                        <li>Must contain at least one UpperCase and one LowerCase letter</li>
+                        <li>Must contain at least one symbol(~,!,@,#,$,%,^,&,*,(,))</li>
+                        <li>Must contain at least one number</li>
+                    </ul>
 
                     <label htmlFor="rePassword">Retype Password:</label>
                     <input type="password" name="rePassword" id="rePassword"

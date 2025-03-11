@@ -1,6 +1,8 @@
 import './ChatScreen.css'
 import { MouseEvent, SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client';
+import { ToastContainer, toast } from 'react-toastify/unstyled';
+import { Filter } from 'bad-words';
 import Pusher from 'pusher-js'
 import FriendRequests from './FriendRequests';
 import exclamation from "./assets/exclamation.png"
@@ -35,6 +37,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
     const [friendRequests, setFriendRequests] = useState<string[]>([]);
     const [responseUser, setResponseUser] = useState("")
     const [showSearch, setShowSearch] = useState(266)
+    const filter = new Filter();
 
     const [addMutation] = useMutation(addQuery)
     const result = useQuery(allQuery, {
@@ -133,9 +136,14 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
             senderName: props.currentUser,
             receiverName: currentChat
         }
-        await addMutation({
-            variables: {input: input}
-        })
+        if(filter.isProfane(textAreaContent)){
+            toast.error("Please send an appropiate message")
+        }
+        else{
+            await addMutation({
+                variables: {input: input}
+            })
+        }
     }
 
     const setReply = (n:string) => {
@@ -203,6 +211,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
 
     return(<>
         <div id='ChatScreen'>
+            <ToastContainer />
             <div id='friends'>
                 {props.friendsList.map((n:string) => 
                     <button onClick={(e)=>setChat(e, n)} style={{backgroundColor: n == currentChat ? "#79D7BE" : "#213555"}}>
@@ -242,7 +251,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
             </div>
             <div id='messageInput'>
                 <textarea onChange={(e: React.ChangeEvent<HTMLTextAreaElement>)=>setTextAreaContent(e.target.value)}
-                    name="textValue" id='textValue'></textarea>
+                    name="textValue" id='textValue' required></textarea>
                 {currentChat? <button onClick={()=>sendMessage()}>Send</button> :
                 <button disabled onClick={()=>sendMessage()}>Send</button>
                 }
