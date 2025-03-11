@@ -18,6 +18,7 @@
     border: 0;
     user-select: all;
 }
+
 .detailForm input:not([type=submit]):focus{
     outline: 0;
 }
@@ -41,10 +42,23 @@
     flex-direction: column;
     flex-basis: 50%;
     height: 100vh;
+    padding: 10px;
     gap: 20px;
     align-items: center;
     justify-content: center;
     background-color: var(--color-five);
+}
+
+#Spassword{
+    margin: 0;
+}
+
+.details ul{
+    margin: 0;
+}
+
+.details ul li{
+    color: #bd835a;
 }
 
 .details div{
@@ -60,6 +74,7 @@
 .error{
     color: red;
     grid-column: 1/3;
+    margin: 0;
 }
 
 .title{

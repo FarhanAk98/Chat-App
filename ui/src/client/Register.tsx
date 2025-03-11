@@ -13,6 +13,11 @@ function Register() {
 
     const handleRegister = async() => {
 
+        if(!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[~!@#$%^&*()]).{7,}$/).test(password)){
+            setError("Please set an appropriate password");
+            return;
+        }
+
         if(password !== rePassword){
             setError("Passwords don't match");
             return;
@@ -65,7 +70,7 @@ function Register() {
                             required/>
                     
                     <label htmlFor="password">Password:</label>
-                    <input type="password" name="password" id="password"
+                    <input type="password" name="password" id="Spassword"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setPassword(e.target.value)}} 
                             required/>
                     
