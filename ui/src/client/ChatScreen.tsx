@@ -137,7 +137,7 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
             receiverName: currentChat
         }
         if(filter.isProfane(textAreaContent)){
-            toast.error("Please send an appropiate message")
+            alert("Please send an appropriate message")
         }
         else{
             await addMutation({
@@ -211,7 +211,6 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
 
     return(<>
         <div id='ChatScreen'>
-            <ToastContainer />
             <div id='friends'>
                 {props.friendsList.map((n:string) => 
                     <button onClick={(e)=>setChat(e, n)} style={{backgroundColor: n == currentChat ? "#79D7BE" : "#213555"}}>
