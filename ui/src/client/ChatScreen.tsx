@@ -96,12 +96,12 @@ function ChatScreen(props:{friendsList: string[], currentUser: string, GetFriend
         })
         
         getRequests();
-        return () => {
-            subscribedChannels.forEach((conn:string) => {
-              pusher.unsubscribe(conn);
-            });
-            pusher.disconnect();
-        };
+        // return () => {
+        //     subscribedChannels.forEach((conn:string) => {
+        //       pusher.unsubscribe(conn);
+        //     });
+        //     pusher.disconnect();
+        // };
     }, [])
 
     const setMessage = (message:any) => {
