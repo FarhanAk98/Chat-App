@@ -55,7 +55,7 @@ function Login(){
                 </div>
                 <div>
                     <input type="submit" value='Submit' />
-                    <button onClick={()=>{navigate('/register')}} >Register</button>
+                    <button type="button" onClick={()=>{navigate('/register')}} >Register</button>
                     <p className="error">{error}</p>
                 </div>
             </div>
